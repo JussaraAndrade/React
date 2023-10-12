@@ -1,10 +1,14 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 // Representa página de login
 export const Login = () => {
     //tem que iniciar o useState vázio para ser exibido no input
     const [email, setEmail] = useState('');//useState - Valores dos componentes sejam atualizados
     const [password, setPassword] = useState('');
+    
+    //Pegar referência de um elemento html
+    //Conseguir pegar a referência do elemento html, e poder usar dentro de callback ou dentro de uma função
+    const inputPasswordRef = useRef<HTMLInputElement>(null);
 
     //useMemo armazena o valor na memória, e permite fazer calculo complexo e deixar armazenado
     //vai ser executado por padrão
@@ -41,6 +45,12 @@ export const Login = () => {
     const handleEntrar = useCallback(() => {
         console.log(email);
         console.log(password);
+
+        // Exemplo 1:
+        // if(inputPasswordRef !== null){
+        //     //Foca o input
+        //     inputPasswordRef.current?.focus();
+        // }
     }, [email, password]);
 
     //Tudo que retorna é um componente html
@@ -50,11 +60,19 @@ export const Login = () => {
                 <p>Quantidade de caracteres no email: {emailLength}</p>
                 <label>
                     <span>Email</span>
-                    <input value={email} onChange={e => setEmail(e.target.value)}/>
+                    <input 
+                        value={email} 
+                        onChange={e => setEmail(e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' ? inputPasswordRef.current?.focus() : undefined}
+                        />
                 </label>
                 <label>
                     <span>Senha</span>
-                    <input type="password" value={password} onChange={e => setPassword(e.target.value)}/>
+                    <input
+                        type="password" 
+                        value={password} 
+                        ref={inputPasswordRef}
+                        onChange={e => setPassword(e.target.value)}/>
                 </label>
                 <button type="button" onClick={handleEntrar}>
                     Entrar
