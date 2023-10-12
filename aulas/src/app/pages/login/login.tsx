@@ -6,6 +6,7 @@ export const Login = () => {
     const [email, setEmail] = useState('');//useState - Valores dos componentes sejam atualizados
     const [password, setPassword] = useState('');
     
+    //Exemplo 1:
     //Pegar referência de um elemento html
     //Conseguir pegar a referência do elemento html, e poder usar dentro de callback ou dentro de uma função
     const inputPasswordRef = useRef<HTMLInputElement>(null);
