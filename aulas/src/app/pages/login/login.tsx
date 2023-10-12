@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 // Representa página de login
 export const Login = () => {
@@ -6,7 +6,14 @@ export const Login = () => {
     const [email, setEmail] = useState('');//useState - Valores dos componentes sejam atualizados
     const [password, setPassword] = useState('');
 
+    //useMemo armazena o valor na memória, e permite fazer calculo complexo e deixar armazenado
+    //vai ser executado por padrão
+    const emailLength = useMemo(() => {
+        console.log('Executou')
+        return email.length * 1000;
+    }, [email.length]);
 
+    
     //Serve para fazer alguns efeitos nos componentes
     //Vai ser executar apenas uma vez, somente quando ele é carregado
     useEffect(() => {
@@ -29,15 +36,18 @@ export const Login = () => {
         console.log(password);
     }, [password]);
     
-    const handleEntrar = () => {
+    //useCallback - serve para armazena uma função em memória
+    //Guarda uma função em memória, é recomendavel usar caso aplicação cresça
+    const handleEntrar = useCallback(() => {
         console.log(email);
         console.log(password);
-    }
+    }, [email, password]);
 
     //Tudo que retorna é um componente html
-    return(
+    return (
         <div>
             <form>
+                <p>Quantidade de caracteres no email: {emailLength}</p>
                 <label>
                     <span>Email</span>
                     <input value={email} onChange={e => setEmail(e.target.value)}/>
