@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { InputLogin } from "./components/InputLogin";
 
 // Representa página de login
 export const Login = () => {
@@ -9,7 +10,7 @@ export const Login = () => {
     //Exemplo 1:
     //Pegar referência de um elemento html
     //Conseguir pegar a referência do elemento html, e poder usar dentro de callback ou dentro de uma função
-    const inputPasswordRef = useRef<HTMLInputElement>(null);
+    // const inputPasswordRef = useRef<HTMLInputElement>(null);
 
     //useMemo armazena o valor na memória, e permite fazer calculo complexo e deixar armazenado
     //vai ser executado por padrão
@@ -59,22 +60,31 @@ export const Login = () => {
         <div>
             <form>
                 <p>Quantidade de caracteres no email: {emailLength}</p>
-                <label>
-                    <span>Email</span>
-                    <input 
-                        value={email} 
-                        onChange={e => setEmail(e.target.value)}
-                        onKeyDown={e => e.key === 'Enter' ? inputPasswordRef.current?.focus() : undefined}
-                        />
-                </label>
-                <label>
+               
+               <InputLogin 
+                label="Email"
+                value={email}
+                onChange={newValue => setEmail(newValue)}
+                // onPressEnter={() => inputPasswordRef.current?.focus()}
+               />
+
+                <InputLogin 
+                label="Senha"
+                type="password"
+                value={password}
+                onChange={newValue => setPassword(newValue)}
+               />
+
+
+                {/* <label>
                     <span>Senha</span>
                     <input
                         type="password" 
                         value={password} 
                         ref={inputPasswordRef}
                         onChange={e => setPassword(e.target.value)}/>
-                </label>
+                </label> */}
+                
                 <button type="button" onClick={handleEntrar}>
                     Entrar
                 </button>
