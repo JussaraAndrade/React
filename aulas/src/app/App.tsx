@@ -1,8 +1,12 @@
+import { UsuarioLogadoProvider } from "./shared/contexts";
 import { Routes } from "./routes";
 
 export const App = () => {
   return (
-    <Routes/>
+    ///Contexto é compartilhado em outras telas
+    <UsuarioLogadoProvider>
+      <Routes />
+    </UsuarioLogadoProvider>
   );
 }
 
