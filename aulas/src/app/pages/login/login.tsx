@@ -10,7 +10,7 @@ export const Login = () => {
     //Exemplo 1:
     //Pegar referência de um elemento html
     //Conseguir pegar a referência do elemento html, e poder usar dentro de callback ou dentro de uma função
-    // const inputPasswordRef = useRef<HTMLInputElement>(null);
+    const inputPasswordRef = useRef<HTMLInputElement>(null);
 
     //useMemo armazena o valor na memória, e permite fazer calculo complexo e deixar armazenado
     //vai ser executado por padrão
@@ -65,25 +65,16 @@ export const Login = () => {
                 label="Email"
                 value={email}
                 onChange={newValue => setEmail(newValue)}
-                // onPressEnter={() => inputPasswordRef.current?.focus()}
+                onPressEnter={() => inputPasswordRef.current?.focus()}
                />
 
-                <InputLogin 
+                <InputLogin
                 label="Senha"
                 type="password"
                 value={password}
+                ref={inputPasswordRef}
                 onChange={newValue => setPassword(newValue)}
                />
-
-
-                {/* <label>
-                    <span>Senha</span>
-                    <input
-                        type="password" 
-                        value={password} 
-                        ref={inputPasswordRef}
-                        onChange={e => setPassword(e.target.value)}/>
-                </label> */}
                 
                 <button type="button" onClick={handleEntrar}>
                     Entrar
