@@ -1,9 +1,15 @@
 import { useCallback, useState } from "react";
 
+interface IListItem {
+    title: string;
+    isSelected: boolean;
+
+}
+
 export const Dashboard = () => {
     //<string[]> - Lista de string 
     //([]) - lista inicial
-    const [lista, setLista] = useState<string[]>(['Teste 1', 'Teste 2', 'Teste 3']);
+    const [lista, setLista] = useState<IListItem[]>([]);
 
     const handleInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = useCallback((e) => {
         // O input emitiu o KeyDown, verifica se a tecla é o keyDown se for o enter pega o currentTarget  
@@ -19,9 +25,12 @@ export const Dashboard = () => {
 
             //Setar o novo valor
             setLista((oldLista) => {// valor atual da lista
-                //Verifica se a lista atual ela tem aquele valor não adiciona o mesmo valor na lista
-                if(oldLista.includes(value)) return oldLista; 
-                return [...oldLista, value];
+                //Na lista antiga verifica some algum o item tem o title igual ao value some irá retornar um boolean
+                if(oldLista.some((listItem) => listItem.title === value)) return oldLista; 
+                return [...oldLista, {
+                    title: value,
+                    isSelected: false,
+                }];
             }); 
         }
     }, []);
@@ -39,8 +48,8 @@ export const Dashboard = () => {
                 {
                     // Exemplo: posição [0] - valor: banana
                     //Jsx; é o html do react 
-                    lista.map((value) =>  {
-                        return <li key={value}>{value}</li>;
+                    lista.map((listItem) =>  {
+                        return <li key={listItem.title}>{listItem.title}</li>;
                     })
                 }
             </ul>
