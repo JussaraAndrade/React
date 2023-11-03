@@ -42,14 +42,36 @@ export const Dashboard = () => {
             <input 
                 onKeyDown={handleInputKeyDown}
             />
+            <p>{lista.filter((listItem) => listItem.isSelected).length}</p>
             <ul>
                 {/* Indica que irá usar javascript */}
                 {/* Map pega o valor atual de um elemento da lista e consegue tranformar elemento em outra coisa */}
                 {
                     // Exemplo: posição [0] - valor: banana
                     //Jsx; é o html do react 
-                    lista.map((listItem) =>  {
-                        return <li key={listItem.title}>{listItem.title}</li>;
+                    lista.map((listItem, index) =>  {
+                        return <li key={listItem.title}>{listItem.title}
+                            <input 
+                                type="checkbox"
+                                checked={listItem.isSelected} //garante que o checkbox esteja com valor atualizado
+                                onChange={() => {
+                                    setLista(oldLista => {
+                                        return oldLista.map(oldListItem => {
+                                            const newIsSelected = oldListItem.title === listItem.title
+                                            ? !oldListItem.isSelected 
+                                            : oldListItem.isSelected;
+
+                                            return {
+                                                ...oldListItem,
+                                                isSelected: newIsSelected,
+                                            };
+                                        })
+                                    })
+                                }}
+                            />
+                        
+                        </li>
+                        ;
                     })
                 }
             </ul>
