@@ -11,45 +11,47 @@ export const Dashboard = () => {
     useEffect(() => {
         //buscar todos os registros
         TarefasService.getAll()
-        .then((result) => {
-            if(result instanceof ApiException) {
-                alert(result.message);
-            } else {
-                setLista(result);
-            }
-        });
+            .then((result) => {
+                if (result instanceof ApiException) {
+                    alert(result.message);
+                } else {
+                    setLista(result);
+                }
+            });
     }, []);
 
     const handleInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = useCallback((e) => {
         // O input emitiu o KeyDown, verifica se a tecla é o keyDown se for o enter pega o currentTarget  
         //Pega o valor na input e irá verificar se for igual 0 cancela
-        if(e.key === 'Enter') {
+        if (e.key === 'Enter') {
             //Remove o espaço tanto da frente e de trás da strings
             //Se o usuário digital 1, 2, 3, espaço em branco, ele remove o espaço e verifica se sem esse espaço ainda existe alguma letra
-            if(e.currentTarget.value.trim().length === 0) return; 
-            
+            if (e.currentTarget.value.trim().length === 0) return;
+
             const value = e.currentTarget.value;
 
             e.currentTarget.value = '';
 
-            //Setar o novo valor
-            setLista((oldLista) => {// valor atual da lista
-                //Na lista antiga verifica some algum o item tem o title igual ao value some irá retornar um boolean
-                if(oldLista.some((listItem) => listItem.title === value)) return oldLista; 
-                return [...oldLista, {
-                    title: value,
-                    isCompleted: false,
-                    id: oldLista.length,
-                }];
-            }); 
+            //Na lista antiga verifica some algum o item na lista que irá retornar um boolean
+            //Verifica se existe a tarefa, se não ele cria uma nova tarefa
+            if (lista.some((listItem) => listItem.title === value)) return;
+
+            TarefasService.create({ title: value, isCompleted: false })
+                .then((result) => {
+                    if (result instanceof ApiException) {
+                        alert(result.message);
+                    } else {
+                        setLista((oldLista) => [...oldLista, result]);
+                    }
+                });
         }
-    }, []);
+    }, [lista]);
 
     return (
         <div>
             <p>Lista</p>
 
-            <input 
+            <input
                 onKeyDown={handleInputKeyDown}
             />
             <p>{lista.filter((listItem) => listItem.isCompleted).length}</p>
@@ -59,17 +61,17 @@ export const Dashboard = () => {
                 {
                     // Exemplo: posição [0] - valor: banana
                     //Jsx; é o html do react 
-                    lista.map((listItem, index) =>  {
+                    lista.map((listItem, index) => {
                         return <li key={listItem.id}>
-                            <input 
+                            <input
                                 type="checkbox"
                                 checked={listItem.isCompleted} //garante que o checkbox esteja com valor atualizado
                                 onChange={() => {
                                     setLista(oldLista => {
                                         return oldLista.map(oldListItem => {
                                             const newIsCompleted = oldListItem.title === listItem.title
-                                            ? !oldListItem.isCompleted 
-                                            : oldListItem.isCompleted;
+                                                ? !oldListItem.isCompleted
+                                                : oldListItem.isCompleted;
 
                                             return {
                                                 ...oldListItem,
@@ -81,7 +83,7 @@ export const Dashboard = () => {
                             />
                             {listItem.title}
                         </li>
-                        ;
+                            ;
                     })
                 }
             </ul>
