@@ -47,6 +47,30 @@ export const Dashboard = () => {
         }
     }, [lista]);
 
+    const handleToggleComplete = useCallback((id: number) => {
+        const tarefaToUpdate = lista.find((tarefa) => tarefa.id === id); //Está buscando a tarefa
+
+        //Se for false não altera nada
+        if(!tarefaToUpdate) return;
+
+        TarefasService.updateById(id, {
+            ...tarefaToUpdate,
+            isCompleted: !tarefaToUpdate.isCompleted,
+        }).then((result) => {
+            if (result instanceof ApiException) {
+                alert(result.message);
+            } else {
+                setLista(oldLista => {
+                    return oldLista.map(oldListItem => {
+                        if(oldListItem.id === id) return result;
+                        return oldListItem;
+                    });
+                });
+            }
+            }
+        );
+    }, [lista]);
+
     return (
         <div>
             <p>Lista</p>
@@ -61,31 +85,16 @@ export const Dashboard = () => {
                 {
                     // Exemplo: posição [0] - valor: banana
                     //Jsx; é o html do react 
-                    lista.map((listItem, index) => {
+                    lista.map((listItem) => {
                         return <li key={listItem.id}>
                             <input
                                 type="checkbox"
                                 checked={listItem.isCompleted} //garante que o checkbox esteja com valor atualizado
-                                onChange={() => {
-                                    setLista(oldLista => {
-                                        return oldLista.map(oldListItem => {
-                                            const newIsCompleted = oldListItem.title === listItem.title
-                                                ? !oldListItem.isCompleted
-                                                : oldListItem.isCompleted;
-
-                                            return {
-                                                ...oldListItem,
-                                                isSelected: newIsCompleted,
-                                            };
-                                        })
-                                    })
-                                }}
+                                onChange={() => handleToggleComplete(listItem.id)}
                             />
                             {listItem.title}
-                        </li>
-                            ;
-                    })
-                }
+                        </li>;
+                    })}
             </ul>
 
         </div>
