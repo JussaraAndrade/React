@@ -1,15 +1,15 @@
 import { useCallback, useState } from "react";
 
-interface IListItem {
+interface ITarefa {
+    id: number;
     title: string;
-    isSelected: boolean;
-
+    isCompleted: boolean;
 }
 
 export const Dashboard = () => {
     //<string[]> - Lista de string 
     //([]) - lista inicial
-    const [lista, setLista] = useState<IListItem[]>([]);
+    const [lista, setLista] = useState<ITarefa[]>([]);
 
     const handleInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = useCallback((e) => {
         // O input emitiu o KeyDown, verifica se a tecla é o keyDown se for o enter pega o currentTarget  
@@ -29,7 +29,8 @@ export const Dashboard = () => {
                 if(oldLista.some((listItem) => listItem.title === value)) return oldLista; 
                 return [...oldLista, {
                     title: value,
-                    isSelected: false,
+                    isCompleted: false,
+                    id: oldLista.length,
                 }];
             }); 
         }
@@ -42,7 +43,7 @@ export const Dashboard = () => {
             <input 
                 onKeyDown={handleInputKeyDown}
             />
-            <p>{lista.filter((listItem) => listItem.isSelected).length}</p>
+            <p>{lista.filter((listItem) => listItem.isCompleted).length}</p>
             <ul>
                 {/* Indica que irá usar javascript */}
                 {/* Map pega o valor atual de um elemento da lista e consegue tranformar elemento em outra coisa */}
@@ -50,26 +51,26 @@ export const Dashboard = () => {
                     // Exemplo: posição [0] - valor: banana
                     //Jsx; é o html do react 
                     lista.map((listItem, index) =>  {
-                        return <li key={listItem.title}>{listItem.title}
+                        return <li key={listItem.id}>
                             <input 
                                 type="checkbox"
-                                checked={listItem.isSelected} //garante que o checkbox esteja com valor atualizado
+                                checked={listItem.isCompleted} //garante que o checkbox esteja com valor atualizado
                                 onChange={() => {
                                     setLista(oldLista => {
                                         return oldLista.map(oldListItem => {
-                                            const newIsSelected = oldListItem.title === listItem.title
-                                            ? !oldListItem.isSelected 
-                                            : oldListItem.isSelected;
+                                            const newIsCompleted = oldListItem.title === listItem.title
+                                            ? !oldListItem.isCompleted 
+                                            : oldListItem.isCompleted;
 
                                             return {
                                                 ...oldListItem,
-                                                isSelected: newIsSelected,
+                                                isSelected: newIsCompleted,
                                             };
                                         })
                                     })
                                 }}
                             />
-                        
+                            {listItem.title}
                         </li>
                         ;
                     })
